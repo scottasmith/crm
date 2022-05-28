@@ -1,0 +1,26 @@
+version: "3.5"
+
+services:
+  web:
+    image: scottsmith/php:8.1-bullseye
+    environment:
+      - UID=1000
+      - GID=1000
+      - PHP_IDE_CONFIG=serverName=crm
+      - XDEBUG_ENABLED=true
+      - REDIS_ENABLED=true
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.crm.rule: "HostRegexp(`local.crm.home`, `unknown.t.local.crm.home`, `{subdomain:[a-z-]+}.t.local.crm.home`)"
+      traefik.http.routers.crm.entrypoints: web
+      traefik.http.services.crm.loadbalancer.server.port: 80
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/var/www
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
