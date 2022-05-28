@@ -55,6 +55,7 @@ final class Version20220519220224 extends AbstractMigration
         $roles = [
             ['id' => 'caf531ee-5bd2-400b-b0ba-42c92e1bf689', 'name' => 'user', 'description' => 'User'],
             ['id' => 'c516fcd2-8b2f-45a9-9f8f-a62307dd80c7', 'name' => 'admin', 'description' => 'Admin'],
+            ['id' => '5c46a10a-ca58-40ac-b25c-d03e2fec26c6', 'name' => 'editor', 'description' => 'Editor'],
         ];
 
         foreach ($roles as $role) {

@@ -3881,16 +3881,16 @@
         },
         {
             "name": "scottsmith/doctrine",
-            "version": "2.1.2",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scottasmith/php-doctrine.git",
-                "reference": "590faf35ba909a219006895aeb0b67a010dbbc77"
+                "reference": "e932a293f80e01cfd906408b6449bcff094eca47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scottasmith/php-doctrine/zipball/590faf35ba909a219006895aeb0b67a010dbbc77",
-                "reference": "590faf35ba909a219006895aeb0b67a010dbbc77",
+                "url": "https://api.github.com/repos/scottasmith/php-doctrine/zipball/e932a293f80e01cfd906408b6449bcff094eca47",
+                "reference": "e932a293f80e01cfd906408b6449bcff094eca47",
                 "shasum": ""
             },
             "require": {
@@ -3923,9 +3923,9 @@
             "description": "Doctrine helpers",
             "support": {
                 "issues": "https://github.com/scottasmith/php-doctrine/issues",
-                "source": "https://github.com/scottasmith/php-doctrine/tree/2.1.2"
+                "source": "https://github.com/scottasmith/php-doctrine/tree/2.2.3"
             },
-            "time": "2022-05-24T20:40:33+00:00"
+            "time": "2022-05-28T19:26:25+00:00"
         },
         {
             "name": "scottsmith/error-handler",

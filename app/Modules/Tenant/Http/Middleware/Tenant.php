@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Auth\Http\Middleware;
+namespace App\Modules\Tenant\Http\Middleware;
 
-use App\Modules\Auth\Http\Middleware\Exception\TenantException;
-use App\Modules\Auth\TenantProvider;
+use App\Modules\Tenant\Http\Middleware\Exception\TenantException;
+use App\Modules\Tenant\Providers\TenantProvider;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

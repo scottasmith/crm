@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Modules\Auth\Http\Middleware\Tenant;
-use App\Modules\Auth\TenantProvider;
+use App\Modules\Tenant\Http\Middleware\Tenant;
+use App\Modules\Tenant\Providers\TenantProvider;
 use Illuminate\Support\ServiceProvider;
 
 class MiddlewareServiceProvider extends ServiceProvider

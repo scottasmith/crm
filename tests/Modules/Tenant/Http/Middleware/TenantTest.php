@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Modules\Auth\Http\Middleware;
+namespace Tests\Modules\Tenant\Http\Middleware;
 
 use App\Entities\Tenant as TenantEntity;
-use App\Modules\Auth\Http\Middleware\Exception\TenantException;
-use App\Modules\Auth\Http\Middleware\Tenant;
-use App\Modules\Auth\TenantProvider;
+use App\Modules\Tenant\Http\Middleware\Exception\TenantException;
+use App\Modules\Tenant\Http\Middleware\Tenant;
+use App\Modules\Tenant\Providers\TenantProvider;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JetBrains\PhpStorm\NoReturn;
@@ -41,7 +41,7 @@ class TenantTest extends TestCase
         $this->tenant = new Tenant(self::TENANT_HOST, $tenantMock);
 
         $this->expectException(TenantException::class);
-        $this->expectExceptionMessage('Invalid request');
+        $this->expectExceptionMessage('Invalid Request');
 
         $this->tenant->handle($request, function () use ($response) { return $response; });
     }

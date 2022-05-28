@@ -41,7 +41,7 @@ class Tenant
     private ?string $description;
 
     #[Column(name: 'is_active', type: 'boolean')]
-    private bool $isActive = false;
+    private bool $isActive = true;
 
     #[OneToMany(mappedBy: 'tenant', targetEntity: TenantAuthProvider::class)]
     private Collection $authProviders;
