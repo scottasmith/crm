@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Modules\Tenant\Http\Middleware\Tenant;
+use App\Http\Middleware\Tenant;
 use App\Modules\Tenant\Providers\TenantProvider;
 use Illuminate\Support\ServiceProvider;
 

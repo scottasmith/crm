@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Modules\Tenant\Http\Middleware\Exception;
+namespace Tests\Http\Middleware\Exception;
 
-use App\Modules\Tenant\Http\Middleware\Exception\TenantException;
+use App\Http\Middleware\Exception\TenantException;
 use JetBrains\PhpStorm\NoReturn;
 use PHPUnit\Framework\TestCase;
 

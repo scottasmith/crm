@@ -20,12 +20,28 @@ class TenantProvider
     }
 
     /**
+     * @param string $name
+     * @return Tenant|null
+     */
+    public function getByName(string $name): ?Tenant
+    {
+        return $this->getTenantRepository()->findOneBy([
+            'name' => $name,
+            'deletedDateTime' => null,
+        ]);
+    }
+
+    /**
      * @param string $slug
      * @return Tenant|null
      */
-    public function getBySlug(string $slug): ?Tenant
+    public function getByActiveSlug(string $slug): ?Tenant
     {
-        return $this->getTenantRepository()->findOneBy(['slug' => $slug, 'isActive' => 1]);
+        return $this->getTenantRepository()->findOneBy([
+            'slug' => $slug,
+            'isActive' => 1,
+            'deletedDateTime' => null,
+        ]);
     }
 
     /**

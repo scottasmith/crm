@@ -13,15 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-$getTenant = function (\Illuminate\Http\Request $request): \App\Entities\Tenant {
+$getTenant = function (\Illuminate\Http\Request $request):? \App\Entities\Tenant {
     return $request->attributes->get('tenant');
 };
 
+//$tenantDomain = '{tenantId}.' . config('tenant.tenant_host');
 
-Route::get('/', function (\Illuminate\Http\Request $request) use ($getTenant) {
-    $tenant = $getTenant($request);
+//Route::domain($tenantDomain)->group(function () use ($getTenant) {
+//    Route::middleware('tenant')->get('/', function (\Illuminate\Http\Request $request) use ($getTenant) {
+//        $tenant = $getTenant($request);
+//        dd($tenant);
+//    });
+//});
 
-    dd($tenant->getUsers()->toArray());
-
-    return view('welcome', ['tenant' => $request->attributes->get('tenant')]);
+Route::get('/', function (\Illuminate\Http\Request $request) {
+    return view('welcome');
 });

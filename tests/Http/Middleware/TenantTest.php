@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Modules\Tenant\Http\Middleware;
+namespace Tests\Http\Middleware;
 
 use App\Entities\Tenant as TenantEntity;
-use App\Modules\Tenant\Http\Middleware\Exception\TenantException;
-use App\Modules\Tenant\Http\Middleware\Tenant;
+use App\Http\Middleware\Exception\TenantException;
+use App\Http\Middleware\Tenant;
 use App\Modules\Tenant\Providers\TenantProvider;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,6 +16,7 @@ use Tests\TestCase;
 
 class TenantTest extends TestCase
 {
+    const HOME_URL = 'http://test.local';
     const TENANT_HOST = 'tenant.test.local';
 
     private TenantProvider|MockInterface $tenantProvider;
@@ -37,7 +38,7 @@ class TenantTest extends TestCase
         $request = $this->createRequest($host, true);
         $response = new Response();
 
-        $tenantMock = $this->tenantProvider->expects('getBySlug')->never()->getMock();
+        $tenantMock = $this->tenantProvider->expects('getByActiveSlug')->never()->getMock();
         $this->tenant = new Tenant(self::TENANT_HOST, $tenantMock);
 
         $this->expectException(TenantException::class);
@@ -55,13 +56,13 @@ class TenantTest extends TestCase
         $request = $this->createRequest($host);
         $response = new Response();
 
-        $tenantMock = $this->tenantProvider->expects('getBySlug')->never()->getMock();
+        $tenantMock = $this->tenantProvider->expects('getByActiveSlug')->never()->getMock();
         $this->tenant = new Tenant(self::TENANT_HOST, $tenantMock);
 
         $response = $this->tenant->handle($request, function () use ($response) { return $response; });
 
         $this->assertSame(BaseResponse::HTTP_FOUND, $response->getStatusCode());
-        $this->assertSame('/', $response->getTargetUrl());
+        $this->assertSame(self::HOME_URL, $response->getTargetUrl());
     }
 
     public function provideBadHosts(): array
@@ -82,7 +83,7 @@ class TenantTest extends TestCase
         $request = $this->createRequest('test.tenant.test.local', true);
         $response = new Response();
 
-        $tenantMock = $this->setUpTenantMock('getBySlug', 'test', null);
+        $tenantMock = $this->setUpTenantMock('getByActiveSlug', 'test', null);
         $this->tenant = new Tenant(self::TENANT_HOST, $tenantMock);
 
         $this->expectException(TenantException::class);
@@ -99,13 +100,13 @@ class TenantTest extends TestCase
         $request = $this->createRequest('test.tenant.test.local');
         $response = new Response();
 
-        $tenantMock = $this->setUpTenantMock('getBySlug', 'test', null);
+        $tenantMock = $this->setUpTenantMock('getByActiveSlug', 'test', null);
         $this->tenant = new Tenant(self::TENANT_HOST, $tenantMock);
 
         $response = $this->tenant->handle($request, function () use ($response) { return $response; });
 
         $this->assertSame(BaseResponse::HTTP_FOUND, $response->getStatusCode());
-        $this->assertSame('/', $response->getTargetUrl());
+        $this->assertSame(self::HOME_URL, $response->getTargetUrl());
     }
 
     /**
@@ -117,7 +118,7 @@ class TenantTest extends TestCase
         $response = new Response();
 
         $tenant = new TenantEntity('test', 'test', 'Test');
-        $tenantMock = $this->setUpTenantMock('getBySlug', 'test', $tenant);
+        $tenantMock = $this->setUpTenantMock('getByActiveSlug', 'test', $tenant);
         $this->tenant = new Tenant(self::TENANT_HOST, $tenantMock);
 
         $response = $this->tenant->handle($request, function () use ($response) {

@@ -42,7 +42,6 @@ class TestUser extends Command
     /**
      * Execute the console command.
      *
-     * @param EntityManagerInterface $em
      * @param CreateTenant $createTenant
      * @param CreateUser $createUser
      * @return int
@@ -50,7 +49,7 @@ class TestUser extends Command
      * @throws CreateUserException
      * @throws BindingResolutionException
      */
-    public function handle(EntityManagerInterface $em, CreateTenant $createTenant, CreateUser $createUser)
+    public function handle(CreateTenant $createTenant, CreateUser $createUser)
     {
         /** @var Generator $faker */
         $faker = Container::getInstance()->make(Generator::class);

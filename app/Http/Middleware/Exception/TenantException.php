@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Tenant\Http\Middleware\Exception;
+namespace App\Http\Middleware\Exception;
 
 use ScottSmith\ErrorHandler\Exception\ApplicationException;
 

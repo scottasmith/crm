@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Tenant\Http\Middleware;
+namespace App\Http\Middleware;
 
-use App\Modules\Tenant\Http\Middleware\Exception\TenantException;
+use App\Http\Middleware\Exception\TenantException;
 use App\Modules\Tenant\Providers\TenantProvider;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -40,7 +40,7 @@ class Tenant
                 throw $exception;
             }
 
-            return new RedirectResponse('/');
+            return new RedirectResponse(config('app.url'));
         };
 
         // didn't match any URL we know about OR didn't match any tenant name
@@ -48,7 +48,7 @@ class Tenant
             return $failure(TenantException::createInvalidUrl());
         }
 
-        $tenant = $this->tenantProvider->getBySlug($match[1]);
+        $tenant = $this->tenantProvider->getByActiveSlug($match[1]);
         if (!$tenant) {
             return $failure(TenantException::createInvalidTenant($match[1]));
         }

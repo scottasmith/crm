@@ -10,13 +10,14 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
+use Exception;
 
 #[Entity]
 #[Table(name: 'user_detail')]
 class UserDetails
 {
     #[Id]
-    #[OneToOne(targetEntity: User::class)]
+    #[OneToOne(inversedBy: 'userDetails', targetEntity: User::class)]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private User $user;
 
@@ -29,7 +30,7 @@ class UserDetails
     #[Column(type: 'string', nullable: false)]
     private ?string $surname;
 
-    #[Column(type: 'string', nullable: false)]
+    #[Column(type: 'string', nullable: true)]
     private ?string $position;
 
     #[Column(name: 'home_tel', type: 'string', nullable: true)]
@@ -42,7 +43,7 @@ class UserDetails
     private ?string $workTel;
 
     #[Column(name: 'other_tel', type: 'simple_array', nullable: true)]
-    private ?string $otherTel;
+    private ?array $otherTel;
 
     public function __construct(User $user)
     {
@@ -58,49 +59,49 @@ class UserDetails
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
     /**
-     * @param string|null $title
+     * @param string $title
      */
-    public function setTitle(?string $title): void
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getGivenName(): ?string
+    public function getGivenName(): string
     {
         return $this->givenName;
     }
 
     /**
-     * @param string|null $givenName
+     * @param string $givenName
      */
-    public function setGivenName(?string $givenName): void
+    public function setGivenName(string $givenName): void
     {
         $this->givenName = $givenName;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getSurname(): ?string
+    public function getSurname(): string
     {
         return $this->surname;
     }
 
     /**
-     * @param string|null $surname
+     * @param string $surname
      */
-    public function setSurname(?string $surname): void
+    public function setSurname(string $surname): void
     {
         $this->surname = $surname;
     }
@@ -170,18 +171,47 @@ class UserDetails
     }
 
     /**
-     * @return string|null
+     * @return array|null
      */
-    public function getOtherTel(): ?string
+    public function getOtherTel(): ?array
     {
         return $this->otherTel;
     }
 
     /**
-     * @param string|null $otherTel
+     * @param array|null $otherTel
      */
-    public function setOtherTel(?string $otherTel): void
+    public function setOtherTel(?array $otherTel): void
     {
         $this->otherTel = $otherTel;
+    }
+
+    /**
+     * @param array $details
+     * @return void
+     * @throws Exception
+     */
+    public function fill(array $details): void
+    {
+        $requiredProperties = ['title', 'givenName', 'surname'];
+        $missingProperties = [];
+
+        foreach ($requiredProperties as $propertyIndex => $propertyName) {
+            if (!isset($details[$propertyName])) {
+                $missingProperties[] = $propertyName;
+            }
+        }
+
+        if (count($missingProperties)) {
+            throw new Exception('Required properties missing: ' . implode(',', $missingProperties));
+        }
+
+        foreach ($details as $property => $value) {
+            $method = 'set' . ucfirst($property);
+
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
     }
 }

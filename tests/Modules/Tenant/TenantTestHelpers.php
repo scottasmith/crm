@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Tenant;
 
+use DateTimeImmutable;
 use Illuminate\Support\Str;
 
 /**
@@ -12,14 +13,19 @@ use Illuminate\Support\Str;
  */
 trait TenantTestHelpers
 {
-    protected function createDbTenant(string $id, string $name): void
-    {
+    protected function createDbTenant(
+        string $id,
+        string $name,
+        bool $isActive = true,
+        DateTimeImmutable $deletedDatetime = null
+    ): void {
         $this->insertDoctrineRow('tenant', [
             'id' => $id,
             'name' => $name,
             'slug' => Str::slug($name),
             'description' => $name . ' Description',
-            'is_active' => 1,
+            'is_active' => $isActive ? 1 : 0,
+            'deleted_datetime' => $deletedDatetime?->format('Y-m-d H:i:s'),
             'created_datetime' => '2022-05-28 01:01:01',
             'updated_datetime' => '2022-05-28 02:02:02',
         ]);

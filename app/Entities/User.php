@@ -12,11 +12,13 @@ use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\InverseJoinColumn;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
@@ -25,6 +27,7 @@ use Ramsey\Uuid\UuidInterface;
 
 #[Entity]
 #[Table(name: 'user')]
+#[Index(columns: ['email'], name: 'email_idx')]
 class User implements Authenticatable
 {
     #[Id]
@@ -35,7 +38,10 @@ class User implements Authenticatable
 
     #[ManyToOne(targetEntity: Tenant::class, fetch: 'LAZY')]
     #[JoinColumn(name: 'tenant_id', referencedColumnName: 'id', unique: false, nullable: false, onDelete: 'restrict')]
-    private ?Tenant $tenant;
+    private Tenant $tenant;
+
+    #[OneToOne(mappedBy: 'user', targetEntity: UserDetails::class)]
+    private ?UserDetails $userDetails = null;
 
     #[ManyToMany(targetEntity: Role::class, fetch: 'LAZY')]
     #[JoinTable(name: 'user_roles')]
@@ -97,6 +103,14 @@ class User implements Authenticatable
     public function getTenant(): Tenant
     {
         return $this->tenant;
+    }
+
+    /**
+     * @return UserDetails|null
+     */
+    public function getUserDetails():? UserDetails
+    {
+        return $this->userDetails;
     }
 
     /**
