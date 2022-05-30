@@ -45,7 +45,7 @@ class TenantProviderTest extends TestCase
 
         $this->createDbTenant($tenantId, $tenantName, deletedDatetime: new DateTimeImmutable());
 
-        $tenant = $this->tenantProvider->getByActiveSlug('test-tenant');
+        $tenant = $this->tenantProvider->getByActiveSlug($tenantName);
         $this->assertNull($tenant);
     }
 
@@ -59,7 +59,7 @@ class TenantProviderTest extends TestCase
 
         $this->createDbTenant($tenantId, $tenantName, isActive: false);
 
-        $tenant = $this->tenantProvider->getByActiveSlug('test-tenant');
+        $tenant = $this->tenantProvider->getByActiveSlug($tenantName);
         $this->assertNull($tenant);
     }
 
@@ -120,6 +120,53 @@ class TenantProviderTest extends TestCase
         $this->createDbTenant($tenantId, $tenantName, isActive: $isActive);
 
         $tenant = $this->tenantProvider->getByName($tenantName);
+
+        $this->assertInstanceOf(Tenant::class, $tenant);
+        $this->assertSame($tenantId, $tenant->getId()->toString());
+        $this->assertSame($tenantName, $tenant->getName());
+        $this->assertSame(Str::slug($tenantName), $tenant->getSlug());
+        $this->assertSame($tenantName . ' Description', $tenant->getDescription());
+        $this->assertSame($isActive, $tenant->isActive());
+        $this->assertNull($tenant->getDeletedDateTime());
+        $this->assertEquals(new DateTimeImmutable('2022-05-28 01:01:01'), $tenant->getCreatedDateTime());
+        $this->assertEquals(new DateTimeImmutable('2022-05-28 02:02:02'), $tenant->getUpdatedDateTime());
+    }
+
+    /**
+     * @group Integration
+     */
+    #[NoReturn] public function test_get_by_id_returns_null_when_doesnt_exist(): void
+    {
+        $tenantId = '5dca843c-70a2-4bde-ad0f-04bd2b072e6e';
+        $this->assertNull($this->tenantProvider->getById($tenantId));
+    }
+
+    /**
+     * @group Integration
+     */
+    #[NoReturn] public function test_get_by_id_returns_null_when_tenant_deleted(): void
+    {
+        $tenantId = '5dca843c-70a2-4bde-ad0f-04bd2b072e6e';
+        $tenantName = 'test-tenant';
+
+        $this->createDbTenant($tenantId, $tenantName, deletedDatetime: new DateTimeImmutable());
+
+        $tenant = $this->tenantProvider->getById($tenantId);
+        $this->assertNull($tenant);
+    }
+
+    /**
+     * @group Integration
+     * @dataProvider provideActiveFlag
+     */
+    #[NoReturn] public function test_get_by_id_returns_tenant_when_not_deleted(bool $isActive): void
+    {
+        $tenantId = '5dca843c-70a2-4bde-ad0f-04bd2b072e6e';
+        $tenantName = 'test-tenant';
+
+        $this->createDbTenant($tenantId, $tenantName, isActive: $isActive);
+
+        $tenant = $this->tenantProvider->getById($tenantId);
 
         $this->assertInstanceOf(Tenant::class, $tenant);
         $this->assertSame($tenantId, $tenant->getId()->toString());

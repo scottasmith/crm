@@ -20,6 +20,18 @@ class TenantProvider
     }
 
     /**
+     * @param string $id
+     * @return Tenant|null
+     */
+    public function getById(string $id): ?Tenant
+    {
+        return $this->getTenantRepository()->findOneBy([
+            'id' => $id,
+            'deletedDateTime' => null,
+        ]);
+    }
+
+    /**
      * @param string $name
      * @return Tenant|null
      */

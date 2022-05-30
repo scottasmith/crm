@@ -60,16 +60,13 @@ class CreateTest extends TestCase
     }
 
     /**
-     * @group Integration
+     * @group NonTransactional
      */
     #[NoReturn] public function test_returns_bad_request_when_tenant_already_exists(): void
     {
         $requestData = $this->createValidData();
 
-        // We can't leave this without committing as it creates a lock, so create with random name
-        $this->getDoctrineConnection()->commit();
         $this->createDbTenant(Uuid::uuid4()->toString(), $requestData['tenant']['name']);
-        $this->getDoctrineConnection()->beginTransaction();
 
         $response = $this->postJson('/api/v1/tenant/create', $requestData);
 
