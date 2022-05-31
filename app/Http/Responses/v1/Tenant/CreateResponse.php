@@ -8,6 +8,7 @@ use App\Entities\Tenant;
 use App\Entities\User;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyAlias;
 
 class CreateResponse implements Responsable
 {
@@ -25,6 +26,6 @@ class CreateResponse implements Responsable
             'user' => [
                 'id' => $this->user->getId()->toString(),
             ],
-        ]);
+        ], SymfonyAlias::HTTP_CREATED);
     }
 }

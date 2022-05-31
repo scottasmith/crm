@@ -8,22 +8,29 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\v1\Tenant\GetResponse;
 use App\Modules\Tenant\Providers\TenantProvider;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class Get extends Controller
 {
     /**
+     * @param TenantProvider $provider
+     */
+    public function __construct(private TenantProvider $provider)
+    {
+    }
+
+    /**
      * @param string $id
-     * @param TenantProvider $tenantProvider
      * @return GetResponse|JsonResponse
      */
-    public function __invoke(string $id, TenantProvider $tenantProvider): GetResponse|JsonResponse
+    public function __invoke(string $id): GetResponse|JsonResponse
     {
-        $tenant = $tenantProvider->getById($id);
+        $tenant = $this->provider->getById($id);
 
         if (!$tenant) {
             return new JsonResponse([
                 'message' => sprintf('Tenant ID %s not found', $id),
-            ], 404);
+            ], SymfonyResponse::HTTP_NOT_FOUND);
         }
 
         return new GetResponse($tenant);

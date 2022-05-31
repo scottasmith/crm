@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Http\Controllers\v1\Tenant;
 
+use App\Modules\Tenant\Events\TenantCreated;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\NoReturn;
 use Ramsey\Uuid\Uuid;
@@ -24,6 +26,13 @@ class CreateTest extends TestCase
 
     use DatabaseHelperTrait;
     use TenantTestHelpers;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Event::fake();
+    }
 
     /**
      * @group Integration
@@ -87,12 +96,14 @@ class CreateTest extends TestCase
 
         $response = $this->postJson('/api/v1/tenant/create', $requestData);
 
-        $this->assertSame(SymfonyResponse::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(SymfonyResponse::HTTP_CREATED, $response->getStatusCode());
         $content = json_decode($response->getContent(), true);
 
         $this->assertDoctrineRowInDb('tenant', ['id' => $content['tenant']['id']]);
         $this->assertDoctrineRowInDb('tenant_auth_provider', ['tenant_id' => $content['tenant']['id']]);
         $this->assertDoctrineRowInDb('user', ['id' => $content['user']['id']]);
+
+        Event::assertDispatched(TenantCreated::class);
     }
 
     public function provideMissingDataValidationData(): array
