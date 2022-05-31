@@ -24,5 +24,6 @@ Route::prefix('v1')->group(function () {
         Route::post('create', [v1\Tenant\Create::class, '__invoke']);
         Route::get('get/{id}', [v1\Tenant\Get::class, '__invoke']);
         Route::patch('update/{id}', [v1\Tenant\Update::class, '__invoke']);
+        Route::delete('deactivate/{id}', [v1\Tenant\Deactivate::class, '__invoke']);
     });
 });
